@@ -21,6 +21,7 @@ structure Geo {
 enum RealEstateType {
     TYPE_11XX = "11xx"
     TYPE_12XX = "12xx"
+    TYPE_3201 = "3201"
 }
 
 @discriminatorValue("11xx")
@@ -49,8 +50,20 @@ structure RealEstate12xx {
     geo: Geo
 }
 
+@discriminatorValue("3201")
+structure RealEstate3201 {
+    @required
+    type: RealEstateType
+
+    @required
+    id: String
+
+    geo: Geo
+}
+
 @discriminatorField("type")
 union PutRealEstate {
     type11xx: RealEstate11xx
     type12xx: RealEstate12xx
+    type3201: RealEstate3201
 }
