@@ -10,8 +10,8 @@ use net.imishinist.traits#jsonExample
 use net.imishinist.traits#protoField
 
 /// マンション物件
-@jsonExample({ type: "11xx", id: "RE-11XX-00001", modifiedAt: "2026-03-04T10:30:00Z" })
-@discriminatorValue("11xx")
+@jsonExample({ type: "1101", id: "RE-1101-00001", modifiedAt: "2026-03-04T10:30:00Z" })
+@discriminatorValue(["1101", "1102", "1103"])
 structure RealEstate11xx {
     /// 物件種別
     @required

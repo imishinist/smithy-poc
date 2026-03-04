@@ -2,9 +2,11 @@ $version: "2"
 
 namespace net.imishinist.traits
 
-/// Specifies the discriminator value for a structure used in a union.
+/// Specifies the discriminator value(s) for a structure used in a union.
 @trait(selector: "structure")
-string discriminatorValue
+list discriminatorValue {
+    member: String
+}
 
 /// Specifies which field to use as the discriminator in a union.
 @trait(selector: "union")

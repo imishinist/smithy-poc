@@ -13,9 +13,7 @@ import software.amazon.smithy.openapi.fromsmithy.Context;
 import software.amazon.smithy.openapi.fromsmithy.OpenApiMapper;
 import software.amazon.smithy.openapi.model.OpenApi;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class UnionDiscriminatorMapper implements OpenApiMapper {
 
@@ -51,7 +49,7 @@ public class UnionDiscriminatorMapper implements OpenApiMapper {
                 continue;
             }
 
-            var refs = new java.util.ArrayList<Node>();
+            var refs = new ArrayList<Node>();
             Map<String, String> mapping = new LinkedHashMap<>();
 
             for (MemberShape member : union.getAllMembers().values()) {
@@ -60,9 +58,13 @@ public class UnionDiscriminatorMapper implements OpenApiMapper {
                 String ref = "#/components/schemas/" + schemaName;
                 refs.add(ObjectNode.builder().withMember("$ref", ref).build());
 
-                target.findTrait(DISCRIMINATOR_VALUE)
-                        .map(t -> t.toNode().expectStringNode().getValue())
-                        .ifPresent(v -> mapping.put(v, ref));
+                target.findTrait(DISCRIMINATOR_VALUE).ifPresent(t -> {
+                    List<String> values = t.toNode().expectArrayNode()
+                            .getElementsAs(n -> n.expectStringNode().getValue());
+                    for (String v : values) {
+                        mapping.put(v, ref);
+                    }
+                });
             }
 
             ObjectNode.Builder discBuilder = ObjectNode.builder()

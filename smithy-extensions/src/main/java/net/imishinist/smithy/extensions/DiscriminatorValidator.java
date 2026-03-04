@@ -33,7 +33,6 @@ public class DiscriminatorValidator extends AbstractValidator {
                     }
                     StructureShape struct = target.asStructureShape().get();
 
-                    // 1. Check field exists
                     Optional<MemberShape> fieldOpt = struct.getMember(fieldName);
                     if (fieldOpt.isEmpty()) {
                         events.add(error(struct, String.format(
@@ -42,40 +41,48 @@ public class DiscriminatorValidator extends AbstractValidator {
                         continue;
                     }
 
-                    // 2. Check @discriminatorValue is present
-                    Optional<String> valueOpt = struct.findTrait(DISCRIMINATOR_VALUE)
-                            .map(t -> t.toNode().expectStringNode().getValue());
-                    if (valueOpt.isEmpty()) {
+                    // Extract list of values
+                    var traitOpt = struct.findTrait(DISCRIMINATOR_VALUE);
+                    if (traitOpt.isEmpty()) {
                         events.add(error(struct, String.format(
                                 "Structure `%s` must have @discriminatorValue trait (member of union `%s`).",
                                 struct.getId().getName(), union.getId().getName())));
                         continue;
                     }
-                    String value = valueOpt.get();
+                    List<String> values = traitOpt.get().toNode().expectArrayNode().getElementsAs(n -> n.expectStringNode().getValue());
+                    if (values.isEmpty()) {
+                        events.add(error(struct, String.format(
+                                "@discriminatorValue on `%s` must not be empty.",
+                                struct.getId().getName())));
+                        continue;
+                    }
 
-                    // 3. Check value exists in enum
+                    // Check values exist in enum
                     Shape fieldTarget = model.expectShape(fieldOpt.get().getTarget());
                     if (fieldTarget.isEnumShape()) {
                         Set<String> enumValues = fieldTarget.asEnumShape().get().getAllMembers().values().stream()
                                 .map(m -> m.expectTrait(EnumValueTrait.class).expectStringValue())
                                 .collect(Collectors.toSet());
-                        if (!enumValues.contains(value)) {
-                            events.add(error(struct, String.format(
-                                    "@discriminatorValue(\"%s\") on `%s` is not a valid value of enum `%s`. Valid values: %s",
-                                    value, struct.getId().getName(), fieldTarget.getId().getName(), enumValues)));
+                        for (String value : values) {
+                            if (!enumValues.contains(value)) {
+                                events.add(error(struct, String.format(
+                                        "@discriminatorValue \"%s\" on `%s` is not a valid value of enum `%s`. Valid values: %s",
+                                        value, struct.getId().getName(), fieldTarget.getId().getName(), enumValues)));
+                            }
                         }
                     }
 
-                    // 4. Check for duplicates
-                    if (!usedValues.add(value)) {
-                        events.add(error(struct, String.format(
-                                "Duplicate @discriminatorValue(\"%s\") in union `%s`.",
-                                value, union.getId().getName())));
+                    // Check for duplicates across union members
+                    for (String value : values) {
+                        if (!usedValues.add(value)) {
+                            events.add(error(struct, String.format(
+                                    "Duplicate @discriminatorValue \"%s\" in union `%s`.",
+                                    value, union.getId().getName())));
+                        }
                     }
                 }
 
-                // 5. Check all enum values are covered by union members
-                // Find the enum shape from the discriminator field of any member
+                // Check all enum values are covered
                 union.getAllMembers().values().stream()
                         .map(m -> model.expectShape(m.getTarget()))
                         .filter(Shape::isStructureShape)

@@ -11,7 +11,7 @@ use net.imishinist.traits#protoField
 
 /// 戸建物件
 @jsonExample({ type: "3201", id: "RE-3201-00008" })
-@discriminatorValue("3201")
+@discriminatorValue(["3201"])
 structure RealEstate3201 {
     /// 物件種別
     @required

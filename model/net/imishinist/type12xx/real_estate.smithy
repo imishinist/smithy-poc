@@ -24,8 +24,8 @@ structure Geo12xx with [GeoMixin] {
 }
 
 /// 土地物件
-@jsonExample({ type: "12xx", id: "RE-12XX-00015" })
-@discriminatorValue("12xx")
+@jsonExample({ type: "1201", id: "RE-1201-00015" })
+@discriminatorValue(["1201", "1202", "1203"])
 @complexValidation([
     {
         id: "RE12XX_001"
