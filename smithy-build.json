@@ -1,0 +1,16 @@
+{
+  "version": "1.0",
+  "sources": ["model"],
+  "maven": {
+    "dependencies": [
+      "software.amazon.smithy:smithy-model:1.68.0",
+      "software.amazon.smithy:smithy-openapi:1.68.0",
+      "software.amazon.smithy:smithy-aws-traits:1.68.0"
+    ]
+  },
+  "plugins": {
+    "openapi": {
+      "service": "net.imishinist#MyService"
+    }
+  }
+}
