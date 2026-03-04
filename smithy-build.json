@@ -1,9 +1,13 @@
 {
   "version": "1.0",
   "sources": ["model"],
-  "plugins": {
+  "projections": {
     "openapi": {
-      "service": "net.imishinist#MyService"
+      "plugins": {
+        "openapi": {
+          "service": "net.imishinist#MyService"
+        }
+      }
     }
   }
 }

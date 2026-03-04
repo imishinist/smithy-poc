@@ -1,1 +1,1 @@
-rootProject.name = "smithy-poc"
+include("openapi-mapper")
