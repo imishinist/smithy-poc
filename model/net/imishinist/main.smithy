@@ -3,6 +3,8 @@ $version: "2"
 namespace net.imishinist
 
 use aws.protocols#restJson1
+use net.imishinist.base#ProblemDetails
+use net.imishinist.base#ValidationProblemDetails
 
 @restJson1
 service MyService {
@@ -81,6 +83,12 @@ service MyService {
 operation PutRealEstates {
     input: PutRealEstatesInput
     output: PutRealEstatesOutput
+    errors: [
+        BadRequestError
+        NotFoundError
+        ConflictError
+        InternalServerError
+    ]
 }
 
 structure PutRealEstatesInput {
@@ -102,3 +110,39 @@ list PutRealEstatesList {
 }
 
 structure PutRealEstatesOutput {}
+
+/// 400 Bad Request - バリデーションエラー
+@error("client")
+@httpError(400)
+structure BadRequestError {
+    @required
+    @httpPayload
+    body: ValidationProblemDetails
+}
+
+/// 404 Not Found - リソースが見つからない
+@error("client")
+@httpError(404)
+structure NotFoundError {
+    @required
+    @httpPayload
+    body: ProblemDetails
+}
+
+/// 409 Conflict - 重複登録
+@error("client")
+@httpError(409)
+structure ConflictError {
+    @required
+    @httpPayload
+    body: ProblemDetails
+}
+
+/// 500 Internal Server Error - 内部エラー
+@error("server")
+@httpError(500)
+structure InternalServerError {
+    @required
+    @httpPayload
+    body: ProblemDetails
+}
