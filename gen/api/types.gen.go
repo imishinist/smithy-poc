@@ -28,6 +28,17 @@ func (e RealEstateType) Valid() bool {
 	}
 }
 
+// Geo defines model for Geo.
+type Geo struct {
+	Location Location `json:"location"`
+}
+
+// Location defines model for Location.
+type Location struct {
+	Latitude  float32 `json:"latitude"`
+	Longitude float32 `json:"longitude"`
+}
+
 // PutRealEstate defines model for PutRealEstate.
 type PutRealEstate struct {
 	union json.RawMessage
@@ -40,6 +51,7 @@ type PutRealEstatesInputBody struct {
 
 // RealEstate11xx defines model for RealEstate11xx.
 type RealEstate11xx struct {
+	Geo        Geo            `json:"geo"`
 	Id         string         `json:"id"`
 	ModifiedAt float64        `json:"modifiedAt"`
 	Type       RealEstateType `json:"type"`
@@ -47,6 +59,7 @@ type RealEstate11xx struct {
 
 // RealEstate12xx defines model for RealEstate12xx.
 type RealEstate12xx struct {
+	Geo  *Geo           `json:"geo,omitempty"`
 	Id   string         `json:"id"`
 	Type RealEstateType `json:"type"`
 }

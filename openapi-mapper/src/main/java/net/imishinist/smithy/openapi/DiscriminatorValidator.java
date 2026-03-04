@@ -73,6 +73,29 @@ public class DiscriminatorValidator extends AbstractValidator {
                                 value, union.getId().getName())));
                     }
                 }
+
+                // 5. Check all enum values are covered by union members
+                // Find the enum shape from the discriminator field of any member
+                union.getAllMembers().values().stream()
+                        .map(m -> model.expectShape(m.getTarget()))
+                        .filter(Shape::isStructureShape)
+                        .map(s -> s.asStructureShape().get())
+                        .flatMap(s -> s.getMember(fieldName).stream())
+                        .map(m -> model.expectShape(m.getTarget()))
+                        .filter(Shape::isEnumShape)
+                        .findFirst()
+                        .ifPresent(enumShape -> {
+                            Set<String> allEnumValues = enumShape.asEnumShape().get().getAllMembers().values().stream()
+                                    .map(m -> m.expectTrait(EnumValueTrait.class).expectStringValue())
+                                    .collect(Collectors.toSet());
+                            Set<String> uncovered = new HashSet<>(allEnumValues);
+                            uncovered.removeAll(usedValues);
+                            if (!uncovered.isEmpty()) {
+                                events.add(error(union, String.format(
+                                        "Union `%s` does not cover all values of enum `%s`. Missing: %s",
+                                        union.getId().getName(), enumShape.getId().getName(), uncovered)));
+                            }
+                        });
             });
         }
 

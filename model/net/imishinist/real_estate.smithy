@@ -5,6 +5,19 @@ namespace net.imishinist
 use net.imishinist.traits#discriminatorField
 use net.imishinist.traits#discriminatorValue
 
+structure Location {
+    @required
+    latitude: Float
+
+    @required
+    longitude: Float
+}
+
+structure Geo {
+    @required
+    location: Location
+}
+
 enum RealEstateType {
     TYPE_11XX = "11xx"
     TYPE_12XX = "12xx"
@@ -20,6 +33,9 @@ structure RealEstate11xx {
 
     @required
     modifiedAt: Timestamp
+
+    @required
+    geo: Geo
 }
 
 @discriminatorValue("12xx")
@@ -29,6 +45,8 @@ structure RealEstate12xx {
 
     @required
     id: String
+
+    geo: Geo
 }
 
 @discriminatorField("type")
