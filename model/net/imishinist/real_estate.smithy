@@ -3,63 +3,9 @@ $version: "2"
 namespace net.imishinist
 
 use net.imishinist.traits#discriminatorField
-use net.imishinist.traits#discriminatorValue
-
-structure Location {
-    @required
-    latitude: Float
-
-    @required
-    longitude: Float
-}
-
-structure Geo {
-    @required
-    location: Location
-}
-
-enum RealEstateType {
-    TYPE_11XX = "11xx"
-    TYPE_12XX = "12xx"
-    TYPE_3201 = "3201"
-}
-
-@discriminatorValue("11xx")
-structure RealEstate11xx {
-    @required
-    type: RealEstateType
-
-    @required
-    id: String
-
-    @required
-    modifiedAt: Timestamp
-
-    @required
-    geo: Geo
-}
-
-@discriminatorValue("12xx")
-structure RealEstate12xx {
-    @required
-    type: RealEstateType
-
-    @required
-    id: String
-
-    geo: Geo
-}
-
-@discriminatorValue("3201")
-structure RealEstate3201 {
-    @required
-    type: RealEstateType
-
-    @required
-    id: String
-
-    geo: Geo
-}
+use net.imishinist.type11xx#RealEstate11xx
+use net.imishinist.type12xx#RealEstate12xx
+use net.imishinist.type3201#RealEstate3201
 
 @discriminatorField("type")
 union PutRealEstate {

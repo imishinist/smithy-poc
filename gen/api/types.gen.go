@@ -14,6 +14,7 @@ import (
 const (
 	N11xx RealEstateType = "11xx"
 	N12xx RealEstateType = "12xx"
+	N3201 RealEstateType = "3201"
 )
 
 // Valid indicates whether the value is a known member of the RealEstateType enum.
@@ -23,6 +24,8 @@ func (e RealEstateType) Valid() bool {
 		return true
 	case N12xx:
 		return true
+	case N3201:
+		return true
 	default:
 		return false
 	}
@@ -30,6 +33,12 @@ func (e RealEstateType) Valid() bool {
 
 // Geo defines model for Geo.
 type Geo struct {
+	Location Location `json:"location"`
+}
+
+// Geo12xx defines model for Geo12xx.
+type Geo12xx struct {
+	Address  string   `json:"address"`
 	Location Location `json:"location"`
 }
 
@@ -59,6 +68,13 @@ type RealEstate11xx struct {
 
 // RealEstate12xx defines model for RealEstate12xx.
 type RealEstate12xx struct {
+	Geo  *Geo12xx       `json:"geo,omitempty"`
+	Id   string         `json:"id"`
+	Type RealEstateType `json:"type"`
+}
+
+// RealEstate3201 defines model for RealEstate3201.
+type RealEstate3201 struct {
 	Geo  *Geo           `json:"geo,omitempty"`
 	Id   string         `json:"id"`
 	Type RealEstateType `json:"type"`
@@ -126,6 +142,34 @@ func (t *PutRealEstate) MergeRealEstate12xx(v RealEstate12xx) error {
 	return err
 }
 
+// AsRealEstate3201 returns the union data inside the PutRealEstate as a RealEstate3201
+func (t PutRealEstate) AsRealEstate3201() (RealEstate3201, error) {
+	var body RealEstate3201
+	err := json.Unmarshal(t.union, &body)
+	return body, err
+}
+
+// FromRealEstate3201 overwrites any union data inside the PutRealEstate as the provided RealEstate3201
+func (t *PutRealEstate) FromRealEstate3201(v RealEstate3201) error {
+	v.Type = "3201"
+	b, err := json.Marshal(v)
+	t.union = b
+	return err
+}
+
+// MergeRealEstate3201 performs a merge with any union data inside the PutRealEstate, using the provided RealEstate3201
+func (t *PutRealEstate) MergeRealEstate3201(v RealEstate3201) error {
+	v.Type = "3201"
+	b, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+
+	merged, err := runtime.JSONMerge(t.union, b)
+	t.union = merged
+	return err
+}
+
 func (t PutRealEstate) Discriminator() (string, error) {
 	var discriminator struct {
 		Discriminator string `json:"type"`
@@ -144,6 +188,8 @@ func (t PutRealEstate) ValueByDiscriminator() (interface{}, error) {
 		return t.AsRealEstate11xx()
 	case "12xx":
 		return t.AsRealEstate12xx()
+	case "3201":
+		return t.AsRealEstate3201()
 	default:
 		return nil, errors.New("unknown discriminator value: " + discriminator)
 	}
