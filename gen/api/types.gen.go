@@ -31,20 +31,27 @@ func (e RealEstateType) Valid() bool {
 	}
 }
 
-// Geo defines model for Geo.
+// Geo 位置情報
 type Geo struct {
+	// Location 緯度経度を表す座標情報
 	Location Location `json:"location"`
 }
 
-// Geo12xx defines model for Geo12xx.
+// Geo12xx 土地物件用の位置情報（住所付き）
 type Geo12xx struct {
-	Address  string   `json:"address"`
+	// Address 所在地住所 (CSV列: 1)
+	Address string `json:"address"`
+
+	// Location 緯度経度を表す座標情報
 	Location Location `json:"location"`
 }
 
-// Location defines model for Location.
+// Location 緯度経度を表す座標情報
 type Location struct {
-	Latitude  float32 `json:"latitude"`
+	// Latitude 緯度（十進法） (CSV列: 1)
+	Latitude float32 `json:"latitude"`
+
+	// Longitude 経度（十進法） (CSV列: 2)
 	Longitude float32 `json:"longitude"`
 }
 
@@ -58,29 +65,46 @@ type PutRealEstatesInputBody struct {
 	RealEstates *[]PutRealEstate `json:"real_estates,omitempty"`
 }
 
-// RealEstate11xx defines model for RealEstate11xx.
+// RealEstate11xx マンション物件
 type RealEstate11xx struct {
-	Geo        Geo            `json:"geo"`
-	Id         string         `json:"id"`
-	ModifiedAt float64        `json:"modifiedAt"`
-	Type       RealEstateType `json:"type"`
+	// Geo 位置情報
+	Geo Geo `json:"geo"`
+
+	// Id 物件ID (CSV列: 2)
+	Id string `json:"id"`
+
+	// ModifiedAt 最終更新日時 (CSV列: 3)
+	ModifiedAt float64 `json:"modifiedAt"`
+
+	// Type 物件種別
+	Type RealEstateType `json:"type"`
 }
 
-// RealEstate12xx defines model for RealEstate12xx.
+// RealEstate12xx 土地物件
 type RealEstate12xx struct {
-	Geo  *Geo12xx       `json:"geo,omitempty"`
-	Id   string         `json:"id"`
+	// Geo 土地物件用の位置情報（住所付き）
+	Geo *Geo12xx `json:"geo,omitempty"`
+
+	// Id 物件ID (CSV列: 2)
+	Id string `json:"id"`
+
+	// Type 物件種別
 	Type RealEstateType `json:"type"`
 }
 
-// RealEstate3201 defines model for RealEstate3201.
+// RealEstate3201 戸建物件
 type RealEstate3201 struct {
-	Geo  *Geo           `json:"geo,omitempty"`
-	Id   string         `json:"id"`
+	// Geo 位置情報
+	Geo *Geo `json:"geo,omitempty"`
+
+	// Id 物件ID (CSV列: 2)
+	Id string `json:"id"`
+
+	// Type 物件種別
 	Type RealEstateType `json:"type"`
 }
 
-// RealEstateType defines model for RealEstateType.
+// RealEstateType 物件種別
 type RealEstateType string
 
 // PutRealEstatesJSONRequestBody defines body for PutRealEstates for application/json ContentType.

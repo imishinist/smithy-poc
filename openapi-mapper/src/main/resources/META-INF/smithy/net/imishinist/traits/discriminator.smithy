@@ -13,3 +13,7 @@ string discriminatorField
 /// Specifies a JSON example for a structure, used to populate OpenAPI `example`.
 @trait(selector: "structure")
 document jsonExample
+
+/// Specifies the CSV column number that this member maps to.
+@trait(selector: "structure > member")
+integer csvColumn
