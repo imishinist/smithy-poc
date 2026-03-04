@@ -4,6 +4,7 @@ namespace net.imishinist.type12xx
 
 use net.imishinist.base#GeoMixin
 use net.imishinist.base#RealEstateType
+use net.imishinist.traits#complexValidation
 use net.imishinist.traits#csvColumn
 use net.imishinist.traits#discriminatorValue
 use net.imishinist.traits#jsonExample
@@ -25,6 +26,14 @@ structure Geo12xx with [GeoMixin] {
 /// 土地物件
 @jsonExample({ type: "12xx", id: "RE-12XX-00015" })
 @discriminatorValue("12xx")
+@complexValidation([
+    {
+        id: "RE12XX_001"
+        description: "住所が設定されている場合、位置情報も必須"
+        condition: { path: "$.geo.address", operator: "not_empty" }
+        effect: { target: "$.geo.location", constraint: "required" }
+    }
+])
 structure RealEstate12xx {
     /// 物件種別
     @required

@@ -13,6 +13,11 @@
       "plugins": {
         "proto-gen": {}
       }
+    },
+    "validation": {
+      "plugins": {
+        "validation-rules": {}
+      }
     }
   }
 }

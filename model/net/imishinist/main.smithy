@@ -6,7 +6,7 @@ use aws.protocols#restJson1
 
 @restJson1
 service MyService {
-    version: "2026-03-04"
+    version: "1"
     operations: [
         PutRealEstates
     ]
