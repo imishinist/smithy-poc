@@ -7,6 +7,7 @@ use net.imishinist.base#RealEstateType
 use net.imishinist.traits#csvColumn
 use net.imishinist.traits#discriminatorValue
 use net.imishinist.traits#jsonExample
+use net.imishinist.traits#protoField
 
 /// 土地物件用の位置情報（住所付き）
 @jsonExample({
@@ -17,6 +18,7 @@ structure Geo12xx with [GeoMixin] {
     /// 所在地住所
     @required
     @csvColumn(1)
+    @protoField(2)
     address: String
 }
 
@@ -27,13 +29,16 @@ structure RealEstate12xx {
     /// 物件種別
     @required
     @csvColumn(1)
+    @protoField(1)
     type: RealEstateType
 
     /// 物件ID
     @required
     @csvColumn(2)
+    @protoField(2)
     id: String
 
     /// 位置情報
+    @protoField(3)
     geo: Geo12xx
 }

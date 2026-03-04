@@ -1,1 +1,1 @@
-include("openapi-mapper")
+include("smithy-extensions")

@@ -1,4 +1,4 @@
-package net.imishinist.smithy.openapi;
+package net.imishinist.smithy.extensions;
 
 import software.amazon.smithy.openapi.fromsmithy.OpenApiMapper;
 import software.amazon.smithy.openapi.fromsmithy.Smithy2OpenApiExtension;
@@ -8,6 +8,6 @@ import java.util.List;
 public class UnionDiscriminatorExtension implements Smithy2OpenApiExtension {
     @Override
     public List<OpenApiMapper> getOpenApiMappers() {
-        return List.of(new UnionDiscriminatorMapper(), new JsonExampleMapper(), new CsvColumnMapper());
+        return List.of(new UnionDiscriminatorMapper(), new JsonExampleMapper(), new CsvColumnMapper(), new UnionExampleMapper());
     }
 }

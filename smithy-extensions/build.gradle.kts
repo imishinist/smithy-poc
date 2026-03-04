@@ -9,4 +9,5 @@ repositories {
 dependencies {
     implementation("software.amazon.smithy:smithy-openapi:1.68.0")
     implementation("software.amazon.smithy:smithy-model:1.68.0")
+    implementation("software.amazon.smithy:smithy-build:1.68.0")
 }

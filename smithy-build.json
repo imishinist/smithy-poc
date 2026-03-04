@@ -8,6 +8,11 @@
           "service": "net.imishinist#MyService"
         }
       }
+    },
+    "proto": {
+      "plugins": {
+        "proto-gen": {}
+      }
     }
   }
 }

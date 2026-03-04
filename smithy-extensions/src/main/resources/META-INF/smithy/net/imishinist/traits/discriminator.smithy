@@ -17,3 +17,7 @@ document jsonExample
 /// Specifies the CSV column number that this member maps to.
 @trait(selector: "structure > member")
 integer csvColumn
+
+/// Specifies the Protocol Buffers field number for this member.
+@trait(selector: "structure > member")
+integer protoField

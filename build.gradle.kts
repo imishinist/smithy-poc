@@ -11,7 +11,7 @@ dependencies {
     implementation("software.amazon.smithy:smithy-model:1.68.0")
     implementation("software.amazon.smithy:smithy-openapi:1.68.0")
     implementation("software.amazon.smithy:smithy-aws-traits:1.68.0")
-    implementation(project(":openapi-mapper"))
+    implementation(project(":smithy-extensions"))
 }
 
 java.sourceSets["main"].java {

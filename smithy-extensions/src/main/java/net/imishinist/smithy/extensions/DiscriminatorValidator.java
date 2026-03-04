@@ -1,4 +1,4 @@
-package net.imishinist.smithy.openapi;
+package net.imishinist.smithy.extensions;
 
 import software.amazon.smithy.model.Model;
 import software.amazon.smithy.model.shapes.*;
