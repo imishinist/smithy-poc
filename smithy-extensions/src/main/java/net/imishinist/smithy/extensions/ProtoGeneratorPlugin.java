@@ -3,6 +3,7 @@ package net.imishinist.smithy.extensions;
 import software.amazon.smithy.build.PluginContext;
 import software.amazon.smithy.build.SmithyBuildPlugin;
 import software.amazon.smithy.model.Model;
+import software.amazon.smithy.model.node.ObjectNode;
 import software.amazon.smithy.model.shapes.*;
 import software.amazon.smithy.model.traits.DocumentationTrait;
 import software.amazon.smithy.model.traits.EnumValueTrait;
@@ -26,9 +27,20 @@ public class ProtoGeneratorPlugin implements SmithyBuildPlugin {
     @Override
     public void execute(PluginContext context) {
         Model model = context.getModel();
+        ObjectNode settings = context.getSettings();
+        String packageName = settings.getStringMemberOrDefault("package", "net.imishinist");
         StringBuilder sb = new StringBuilder();
         sb.append("syntax = \"proto3\";\n\n");
-        sb.append("package net.imishinist;\n\n");
+        sb.append("package ").append(packageName).append(";\n\n");
+
+        // Emit options from settings
+        settings.getObjectMember("options").ifPresent(opts -> {
+            for (var entry : opts.getStringMap().entrySet()) {
+                sb.append("option ").append(entry.getKey()).append(" = \"")
+                  .append(entry.getValue().expectStringNode().getValue()).append("\";\n");
+            }
+            sb.append("\n");
+        });
 
         // Collect shapes to generate
         Set<ShapeId> generated = new LinkedHashSet<>();

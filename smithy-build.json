@@ -11,7 +11,12 @@
     },
     "proto": {
       "plugins": {
-        "proto-gen": {}
+        "proto-gen": {
+          "package": "net.imishinist",
+          "options": {
+            "go_package": "github.com/imishinist/smithy-poc/gen/proto"
+          }
+        }
       }
     },
     "validation": {
